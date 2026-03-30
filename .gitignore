@@ -1,24 +1,33 @@
-# Maven
+# --- Maven & Build ---
+**/target/
 .m2/
-target/
 
-# IDE
-.vscode/
+# --- Eclipse / STS ---
+**/.classpath
+**/.project
+**/.settings/
+**/.factorypath
 .metadata/
+
+# --- IDE (VS Code / IntelliJ) ---
+.vscode/
+.idea/
+*.iml
+
+# --- Logs & Temp ---
+**/logs/
 *.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Env
-.env
-
-# Docker
+hs_err_pid*
+replay_pid*
 *.pid
 
-# Sonar
+# --- Environment & Secrets ---
+.env
+uploads/
+
+# --- Sonar ---
 .sonarlint/
 
-# Logs
-logs/
+# --- OS Files ---
+.DS_Store
+Thumbs.db
