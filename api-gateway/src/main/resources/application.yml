@@ -1,0 +1,105 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+  cloud:
+    gateway:
+      routes:
+
+        # ================= NORMAL ROUTES =================
+        - id: auth-service
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/api/auth/**
+
+        - id: policy-service
+          uri: lb://POLICY-SERVICE
+          predicates:
+            - Path=/api/policies/**
+          filters:
+            - JwtAuthenticationFilter
+
+        - id: claims-service
+          uri: lb://CLAIMS-SERVICE
+          predicates:
+            - Path=/api/claims/**
+          filters:
+            - JwtAuthenticationFilter
+
+        - id: admin-service
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/api/admin/**
+          filters:
+            - JwtAuthenticationFilter
+
+
+        # ================= SWAGGER ROUTES (FIXED 🔥) =================
+
+        - id: auth-swagger
+          uri: lb://AUTH-SERVICE
+          predicates:
+            - Path=/auth/v3/api-docs,/auth/v3/api-docs/**
+          filters:
+            - RewritePath=/auth/(?<segment>.*), /${segment}
+
+        - id: policy-swagger
+          uri: lb://POLICY-SERVICE
+          predicates:
+            - Path=/policy/v3/api-docs,/policy/v3/api-docs/**
+          filters:
+            - RewritePath=/policy/(?<segment>.*), /${segment}
+
+        - id: claims-swagger
+          uri: lb://CLAIMS-SERVICE
+          predicates:
+            - Path=/claims/v3/api-docs,/claims/v3/api-docs/**
+          filters:
+            - RewritePath=/claims/(?<segment>.*), /${segment}
+
+        - id: admin-swagger
+          uri: lb://ADMIN-SERVICE
+          predicates:
+            - Path=/admin/v3/api-docs,/admin/v3/api-docs/**
+          filters:
+            - RewritePath=/admin/(?<segment>.*), /${segment}
+
+
+# ================= SWAGGER UI =================
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    urls:
+      - name: Auth Service
+        url: /auth/v3/api-docs
+      - name: Policy Service
+        url: /policy/v3/api-docs
+      - name: Claims Service
+        url: /claims/v3/api-docs
+      - name: Admin Service
+        url: /admin/v3/api-docs
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,info,prometheus"
+  endpoint:
+    health:
+      show-details: always
+    prometheus:
+      enabled: true

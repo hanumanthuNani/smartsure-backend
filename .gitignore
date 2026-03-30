@@ -1,0 +1,24 @@
+# Maven
+.m2/
+target/
+
+# IDE
+.vscode/
+.metadata/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+
+# Docker
+*.pid
+
+# Sonar
+.sonarlint/
+
+# Logs
+logs/

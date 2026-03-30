@@ -1,0 +1,36 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: eureka-server
+
+# --- DEFAULT PROFILE (Local Windows/Mac) ---
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  server:
+    wait-time-in-ms-when-sync-empty: 0
+
+---
+# --- DOCKER PROFILE ---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+eureka:
+  instance:
+    # Inside Docker, the hostname MUST be the service name
+    hostname: eureka-server
+  client:
+    registerWithEureka: false
+    fetchRegistry: false
+    serviceUrl:
+      # Use the container hostname here too
+      defaultZone: http://eureka-server:8761/eureka/

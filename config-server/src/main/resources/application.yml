@@ -1,0 +1,43 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/hanumanthuNani/smartsure-config.git
+          default-label: main
+          clone-on-start: true
+          force-pull: true
+
+# --- DEFAULT PROFILE (Local Windows/Mac) ---
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    preferIpAddress: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+---
+# --- DOCKER PROFILE (Only active when SPRING_PROFILES_ACTIVE=docker) ---
+spring:
+  config:
+    activate:
+      on-profile: docker
+
+eureka:
+  client:
+    serviceUrl:
+      # Inside Docker, use the service name 'eureka-server'
+      defaultZone: http://eureka-server:8761/eureka/
